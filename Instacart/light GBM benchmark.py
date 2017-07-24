@@ -12,7 +12,7 @@
 import numpy as np
 import pandas as pd
 import lightgbm as lgb
-IDIR = '../input/'
+IDIR = './data/'
 
 # 导入数据
 print('loading prior')
@@ -116,6 +116,7 @@ priors['user_product'] = priors.product_id + priors.user_id * 100000
 
 # d中保存了用户和对应商品的信息，包括用户购买了几次该商品、用户购买该商品的最大order_number以及
 # 用户对该商品add_to_cart_order的和
+# nb_orders, last_order_id, sum_pos_in_cart
 
 d= dict()
 for row in priors.itertuples():
@@ -161,8 +162,14 @@ def features(selected_orders, labels_given=False):
         order_id = row.order_id
         user_id = row.user_id
         user_products = users.all_products[user_id]
+        # 得到所有商品列表?
         product_list += user_products
+        # 将订单-商品二维表拆成一维表
         order_list += [order_id] * len(user_products)
+
+        # 将train中出现的order_id, product组合的label标记为True, 反之标记为False
+        # 不使用Train中的reodered的原因是priors中的组合数量远大于train中的(order_id, product)组合数
+        
         if labels_given:
             labels += [(order_id, product) in train.index for product in user_products]
         
