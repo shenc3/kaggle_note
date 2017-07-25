@@ -156,6 +156,9 @@ def features(selected_orders, labels_given=False):
     product_list = []
     labels = []
     i=0
+
+    # 构造一个包含train index值的字典，用于后边的labels查找
+    train_index_lookup = dict().fromkeys(train.index.values)
     for row in selected_orders.itertuples():
         i+=1
         if i%10000 == 0: print('order row',i)
@@ -171,7 +174,7 @@ def features(selected_orders, labels_given=False):
         # 不使用Train中的reodered的原因是priors中的组合数量远大于train中的(order_id, product)组合数
         
         if labels_given:
-            labels += [(order_id, product) in train.index for product in user_products]
+            labels += [(order_id, product) in train_index_lookup for product in user_products]
         
     df = pd.DataFrame({'order_id':order_list, 'product_id':product_list}, dtype=np.int32)
     labels = np.array(labels, dtype=np.int8)
