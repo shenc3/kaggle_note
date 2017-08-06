@@ -155,13 +155,13 @@ def features(selected_orders, labels_given=False):
     order_list = []
     product_list = []
     labels = []
-    i=0
+    i = 0
 
     # 构造一个包含train index值的字典，用于后边的labels查找
     train_index_lookup = dict().fromkeys(train.index.values)
     for row in selected_orders.itertuples():
-        i+=1
-        if i%10000 == 0: print('order row',i)
+        i += 1
+        if i % 10000 == 0: print('order row',i)
         order_id = row.order_id
         user_id = row.user_id
         user_products = users.all_products[user_id]
