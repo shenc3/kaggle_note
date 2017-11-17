@@ -10,11 +10,24 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+from io import StringIO
 
+
+def get_train_sample(train_data, size=1000):
+    train_sample = StringIO()
+    with open(train_data) as data:
+        for _ in range(size):
+            train_sample.write(data.readline())
+    train_sample.seek(0)
+    return train_sample
+
+# 数据文件夹
 DIR = r"D:\PlayGround\kaggle\Grocery"
 
 # 训练集
-train = pd.read_csv(os.path.join(DIR, "train.csv"))
+train_data = get_train_sample(os.path.join(DIR, "train.csv"), size=3e6+1)
+train = pd.read_csv(train_data)
+del train_data
 
 # train: shape = 125497040 x 6
 # cols: id, date, store_nbr, item_nbr, unit_sales, onpromotion
