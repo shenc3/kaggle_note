@@ -96,7 +96,7 @@ for df in ['ar','hr']:
     # 创建新特征datetime_diff: 表示到店时间和预订时间的差值
     data[df]['reserve_datetime_diff'] = data[df].apply(lambda r: (r['visit_datetime'] - r['reserve_datetime']).days, axis=1)
     
-    # 以(air_store_id, visit_datetime)为分组计算预订时间和预订人数的总和(sum: tmp1)与均值(mean: tmp2)
+    # 以(air_store_id, visit_datetime)为分组计算预订时间差和预订人数的总和(sum: tmp1)与均值(mean: tmp2)
     tmp1 = data[df].groupby(['air_store_id','visit_datetime'], as_index=False)[['reserve_datetime_diff', 'reserve_visitors']].sum().rename(columns={'visit_datetime':'visit_date', 'reserve_datetime_diff': 'rs1', 'reserve_visitors':'rv1'})
     tmp2 = data[df].groupby(['air_store_id','visit_datetime'], as_index=False)[['reserve_datetime_diff', 'reserve_visitors']].mean().rename(columns={'visit_datetime':'visit_date', 'reserve_datetime_diff': 'rs2', 'reserve_visitors':'rv2'})
     data[df] = pd.merge(tmp1, tmp2, how='inner', on=['air_store_id','visit_date'])
